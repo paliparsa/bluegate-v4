@@ -16,7 +16,7 @@ final class ProvisionService {
    if($order->status==='active'){
     return Service::where('order_id',$orderId)->firstOrFail();
    }
-   if($order->status!=='paid') throw new RuntimeException('Order is not paid');
+   if(!in_array($order->status,['paid','provisioning_failed'],true)) throw new RuntimeException('Order is not payable/provisionable');
    $item=DB::table('order_items')->where('order_id',$orderId)->firstOrFail();
    $plan=DB::table('plans')->where('id',$item->plan_id)->firstOrFail();
    $opKey='provision:'.$item->id;
