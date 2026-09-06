@@ -825,3 +825,24 @@ cd /var/www/bluegate
 sudo -u www-data php artisan config:clear
 sudo -u www-data php artisan config:cache
 ```
+
+
+---
+
+## Phase 7.1 — BlueGate UI/UX Overhaul
+
+این فاز Feature Backend جدید اضافه نمی‌کند و روی تجربه کاربر تمرکز دارد.
+
+- Design System جدید BlueGate با هویت Premium Network/SaaS
+- Landing Page جدید BluePing/BlueGate
+- Sidebar و Navigation بازطراحی‌شده
+- Active route states
+- Mobile bottom navigation
+- Dashboard جدید با KPI، Service cards و Quick Actions
+- My Services به‌صورت کارت‌های responsive
+- Service Control با Quick Connect و Subscription presentation بهتر
+- Store/Buy UI جدید
+- Auth polish
+- Empty states، badges، progress bars و responsive behavior استاندارد
+- تمام route/form/actionهای Phase 6 حفظ شده‌اند
+- Admin همچنان functional است و Design System جدید را به ارث می‌برد؛ بازطراحی تخصصی Admin/Reseller برای Phase 7.2 است.

@@ -2,8 +2,8 @@
 @section('title','مدیریت سرویس — BlueGate')
 @section('content')
 <div class="top-title">
- <div><h2>{{ $product->name ?? 'BluePing Service' }}</h2><div class="muted">{{ $plan->name ?? 'سرویس سفارشی' }}</div></div>
- <span class="pill">{{ strtoupper($s->status) }}</span>
+ <div><span class="muted" style="font-size:11px">SERVICE CONTROL</span><h2>{{ $product->name ?? 'BluePing Service' }}</h2><div class="muted">{{ $plan->name ?? 'سرویس سفارشی' }} · {{ substr($s->id,0,8) }}</div></div>
+ <span class="pill {{ $s->status==='active'?'ok':'' }}"><i class="network-dot"></i>{{ strtoupper($s->status) }}</span>
 </div>
 
 <div class="grid">
@@ -15,14 +15,14 @@
  <div class="card"><h3>انقضا</h3><div class="price" style="font-size:22px">{{ $s->expires_at ?? 'بدون تاریخ' }}</div><p class="muted">شروع: {{ $s->starts_at ?? '—' }}</p></div>
 </div>
 
-<div class="section"><div class="card"><h3>Subscription</h3>
+<div class="section"><div class="card"><div class="service-head"><div><span class="muted" style="font-size:11px">QUICK CONNECT</span><h3 style="margin-top:5px">Subscription اختصاصی</h3></div><span class="pill">PRIVATE LINK</span></div>
 @if($subscriptionUrl)
  <p class="muted">لینک اختصاصی BlueGate؛ جزئیات 3x-ui برای کاربر مخفی می‌ماند.</p>
- <div class="field"><input id="suburl" class="input" readonly value="{{ $subscriptionUrl }}"></div>
+ <div class="sub-box"><input id="suburl" class="input" readonly value="{{ $subscriptionUrl }}">
  <div style="display:flex;gap:10px;flex-wrap:wrap">
   <button class="btn primary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('suburl').value);this.innerText='کپی شد ✓'">Copy Subscription</button>
   <button class="btn" type="button" onclick="toggleQr()">QR Code</button>
- </div>
+ </div></div>
  <div id="qrbox" style="display:none;margin-top:18px;background:#fff;width:max-content;padding:14px;border-radius:14px"><div id="qrcode"></div></div>
 @else <p class="muted">Subscription هنوز برای این سرویس ساخته نشده است.</p> @endif
 </div></div>

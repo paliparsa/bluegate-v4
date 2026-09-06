@@ -2,7 +2,7 @@
 @section('title','خرید سرویس — BlueGate')
 @section('content')
 <div class="top-title">
- <div><h2>خرید سرویس</h2><div class="muted">پلن مناسب را انتخاب کن؛ کد تخفیف را همان موقع اعمال کن.</div></div>
+ <div><span class="muted" style="font-size:11px">BLUEPING STORE</span><h2>یک پلن انتخاب کن</h2><div class="muted">سرویس بعد از پرداخت به‌صورت خودکار آماده می‌شود.</div></div>
  <form method="post" action="{{ route('app.trial.claim') }}">@csrf<button class="btn">دریافت تست رایگان</button></form>
 </div>
 @foreach($products as $product)
@@ -10,7 +10,7 @@
  <h2 style="font-size:22px">{{ $product->name }}</h2><p class="section-lead">{{ $product->description }}</p>
  <div class="grid">
  @foreach($plans->get($product->id,collect()) as $plan)
- <form class="card" method="post" action="{{ route('app.buy.order') }}">@csrf
+ <form class="card service-card" method="post" action="{{ route('app.buy.order') }}">@csrf
   <input type="hidden" name="plan_id" value="{{ $plan->id }}">
   <span class="pill">{{ $plan->duration_days }} روز</span>
   @if($plan->trial_enabled)<span class="pill">Trial</span>@endif
