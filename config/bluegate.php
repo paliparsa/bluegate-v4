@@ -29,4 +29,7 @@ return [
   'block_reused_ip' => env('BLUEGATE_TRIAL_BLOCK_REUSED_IP',true),
   'block_reused_fingerprint' => env('BLUEGATE_TRIAL_BLOCK_REUSED_FINGERPRINT',true),
  ],
+ 'failover' => [
+  'failure_threshold' => env('BLUEGATE_FAILOVER_FAILURE_THRESHOLD',3),
+ ],
 ];

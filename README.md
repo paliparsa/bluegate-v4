@@ -648,3 +648,180 @@ Admin:
 ### نکته Deployment
 
 Phase 5 بر پایه Phase 4.2 ساخته شده و Hotfix تشخیص PHP-FPM بدون SIGPIPE/exit 141 را حفظ می‌کند.
+
+
+---
+
+## Phase 6 — Reseller API + Advanced Routing + Failover + Analytics
+
+Phase 6 لایه عملیاتی/فروش عمده BlueGate را اضافه می‌کند.
+
+### Reseller
+
+Admin:
+- `/admin/resellers`
+- فعال/غیرفعال کردن Reseller
+- Discount درصدی
+- Credit Limit
+- API enable/disable
+
+User:
+- `/app/reseller`
+- ساخت API Key
+- انتخاب Ability
+- Revoke Key
+- نمایش API Key فقط یک‌بار
+
+API Keyها فقط به‌صورت SHA-256 hash در دیتابیس ذخیره می‌شوند و Plain Token بعد از ساخت قابل بازیابی نیست.
+
+### Reseller API
+
+Base:
+
+```text
+/api/v1/reseller
+```
+
+Authorization:
+
+```http
+Authorization: Bearer bg_live_xxxxxxxxx
+```
+
+Endpoints:
+
+```text
+GET  /catalog
+GET  /balance
+GET  /orders
+POST /orders
+POST /orders/{id}/retry
+GET  /services
+```
+
+برای `POST /orders` هدر زیر اجباری است:
+
+```http
+Idempotency-Key: YOUR_UNIQUE_ORDER_KEY
+```
+
+ارسال دوباره همان key باعث Debit یا ساخت Order دوم نمی‌شود.
+
+API Key abilities:
+
+```text
+catalog.read
+balance.read
+orders.read
+orders.write
+services.read
+```
+
+Rate limit پیش‌فرض Reseller API برابر 120 request/minute است.
+
+### Reseller pricing / credit
+
+قیمت Reseller از `base_price` با `discount_percent` محاسبه می‌شود.
+
+اگر Wallet کافی نباشد، Reseller تا `credit_limit` می‌تواند Balance منفی داشته باشد. تمام Debitها همچنان در `wallet_transactions` ثبت می‌شوند.
+
+### Advanced Node Routing
+
+`NodeSelector` اکنون علاوه بر:
+
+- online
+- sales_enabled
+- maintenance
+- weight
+- load
+- user load
+- traffic load
+
+ظرفیت `max_users` و `max_traffic_bytes` را هم در scoring لحاظ می‌کند.
+
+همچنین Nodeهای مشخص را می‌توان از انتخاب حذف کرد که برای Failover استفاده می‌شود.
+
+### Safe Inbound Sync
+
+باگ قدیمی Sync رفع شده است.
+
+Sync مجدد 3x-ui دیگر UUID اصلی رکورد `inbounds` را عوض نمی‌کند. برای Inbound موجود فقط فیلدهای mutable بروزرسانی می‌شوند و UUID/created_at ثابت می‌مانند.
+
+### Automatic Failover
+
+Scheduler هر 5 دقیقه:
+
+```text
+bluegate:check-nodes
+bluegate:failover
+```
+
+را اجرا می‌کند.
+
+پیش‌فرض:
+
+```env
+BLUEGATE_FAILOVER_FAILURE_THRESHOLD=3
+```
+
+بعد از 3 Health failure متوالی:
+
+1. Node offline تشخیص داده می‌شود.
+2. Active endpointهای آن پیدا می‌شوند.
+3. Node سالم دیگری در **همان Location** انتخاب می‌شود.
+4. Client با UUID قبلی روی مقصد ساخته می‌شود.
+5. Subscription URI جدید ذخیره می‌شود.
+6. Endpoint جدید active می‌شود.
+7. Endpoint قبلی `failed_over` می‌شود.
+8. حذف Client قدیمی به‌صورت best-effort انجام می‌شود.
+
+Subscription token کاربر تغییر نمی‌کند.
+
+Failover دستی هم از:
+
+```text
+/admin/nodes
+```
+
+در دسترس است.
+
+CLI:
+
+```bash
+php artisan bluegate:check-nodes
+php artisan bluegate:failover
+php artisan bluegate:failover --node=NODE_UUID
+```
+
+### Analytics
+
+```text
+/admin/analytics
+```
+
+نمایش:
+- Revenue 30 days
+- Orders 30 days
+- Active Services
+- Online Nodes
+- Reseller count
+- API calls 24h
+- Failovers 30d
+- Daily sales
+- Node health/failure counters
+
+### Deployment
+
+Phase 6 بر پایه Phase 5 و Hotfix Phase 4.2 ساخته شده است. Laravel scheduler در installer با cron دقیقه‌ای فعال می‌شود.
+
+```bash
+sudo bash /opt/bluegate/source/deploy/scripts/update-vps.sh
+```
+
+بعد از Deploy:
+
+```bash
+cd /var/www/bluegate
+sudo -u www-data php artisan config:clear
+sudo -u www-data php artisan config:cache
+```

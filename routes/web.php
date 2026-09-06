@@ -9,6 +9,9 @@ use App\Http\Controllers\App\PaymentController;
 use App\Http\Controllers\App\ServiceOperationController;
 use App\Http\Controllers\Admin\OperationsController;
 use App\Http\Controllers\Admin\CommerceController;
+use App\Http\Controllers\Admin\ResellerAdminController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\App\ResellerController;
 use App\Http\Controllers\App\GrowthController;
 use App\Http\Controllers\App\TicketController;
 use App\Http\Controllers\App\TelegramLinkController;
@@ -54,6 +57,9 @@ Route::prefix('app')->middleware('auth')->name('app.')->group(function(){
  Route::get('/tickets/{id}',[TicketController::class,'show'])->name('tickets.show');
  Route::post('/tickets/{id}/reply',[TicketController::class,'reply'])->name('tickets.reply');
  Route::post('/telegram/link',[TelegramLinkController::class,'create'])->name('telegram.link');
+ Route::get('/reseller',[ResellerController::class,'dashboard'])->name('reseller');
+ Route::post('/reseller/keys',[ResellerController::class,'createKey'])->name('reseller.keys.create');
+ Route::post('/reseller/keys/{id}/revoke',[ResellerController::class,'revokeKey'])->name('reseller.keys.revoke');
 });
 Route::get('/payments/zarinpal/callback/{payment}/{token}',[PaymentController::class,'callback'])->name('payments.zarinpal.callback');
 
@@ -63,6 +69,7 @@ Route::prefix('admin')->middleware(['auth','admin'])->name('admin.')->group(func
  Route::post('/nodes',[OperationsController::class,'storeNode'])->name('nodes.store');
  Route::post('/nodes/{node}/health',[OperationsController::class,'health'])->name('nodes.health');
  Route::post('/nodes/{node}/sync',[OperationsController::class,'sync'])->name('nodes.sync');
+ Route::post('/nodes/{node}/failover',[OperationsController::class,'failover'])->name('nodes.failover');
  Route::get('/wallets',[OperationsController::class,'wallets'])->name('wallets');
  Route::post('/wallets/credit',[OperationsController::class,'credit'])->name('wallets.credit');
  Route::get('/products',[CommerceController::class,'products'])->name('products');
@@ -77,6 +84,10 @@ Route::prefix('admin')->middleware(['auth','admin'])->name('admin.')->group(func
  Route::get('/tickets/{id}',[CommerceController::class,'ticket'])->name('tickets.show');
  Route::post('/tickets/{id}/reply',[CommerceController::class,'replyTicket'])->name('tickets.reply');
  Route::get('/payments',[AdminController::class,'payments'])->name('payments');
+ Route::get('/resellers',[ResellerAdminController::class,'index'])->name('resellers');
+ Route::post('/resellers',[ResellerAdminController::class,'store'])->name('resellers.store');
+ Route::put('/resellers/{id}',[ResellerAdminController::class,'update'])->name('resellers.update');
+ Route::get('/analytics',AnalyticsController::class)->name('analytics');
 });
 Route::post('/telegram/webhook/{secret}',TelegramWebhookController::class)
  ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])

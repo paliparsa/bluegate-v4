@@ -16,6 +16,9 @@
             <a href="{{ route('app.referral') }}">دعوت دوستان</a>
             <a href="{{ route('app.tickets') }}">پشتیبانی</a>
             <a href="{{ route('app.notifications') }}">اعلان‌ها</a>
+            @if(auth()->user()->role === 'reseller')
+                <a href="{{ route('app.reseller') }}">Reseller API</a>
+            @endif
 
             @if(in_array(auth()->user()->role, ['admin', 'super_admin'], true))
                 <a href="{{ route('admin.dashboard') }}">پنل مدیریت</a>
@@ -25,6 +28,8 @@
                 <a href="{{ route('admin.products') }}">محصولات و پلن‌ها</a>
                 <a href="{{ route('admin.coupons') }}">کدهای تخفیف</a>
                 <a href="{{ route('admin.tickets') }}">تیکت‌ها</a>
+                <a href="{{ route('admin.resellers') }}">Resellers</a>
+                <a href="{{ route('admin.analytics') }}">Analytics</a>
             @endif
         </nav>
     </aside>
