@@ -16,9 +16,11 @@
 <form method="post" action="{{ route('app.orders.wallet',$o->id) }}">@csrf
 <button class="btn" type="submit">پرداخت با کیف پول</button>
 </form>
+@if((float)$o->payable > 0)
 <form method="post" action="{{ route('app.orders.zarinpal',$o->id) }}">@csrf
 <button class="btn primary" type="submit">پرداخت آنلاین</button>
 </form>
+@endif
 </div>
 @elseif($o->status==='active')<span style="color:var(--ok)">تحویل شد</span>
 @elseif($o->status==='provisioning_failed')<span style="color:var(--danger)">ساخت سرویس ناموفق</span>

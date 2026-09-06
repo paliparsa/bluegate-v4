@@ -13,12 +13,18 @@
             <a href="{{ route('app.buy') }}">خرید سرویس</a>
             <a href="{{ route('app.wallet') }}">کیف پول</a>
             <a href="{{ route('app.orders') }}">سفارش‌ها</a>
+            <a href="{{ route('app.referral') }}">دعوت دوستان</a>
+            <a href="{{ route('app.tickets') }}">پشتیبانی</a>
+            <a href="{{ route('app.notifications') }}">اعلان‌ها</a>
 
             @if(in_array(auth()->user()->role, ['admin', 'super_admin'], true))
                 <a href="{{ route('admin.dashboard') }}">پنل مدیریت</a>
                 <a href="{{ route('admin.nodes') }}">مدیریت نودها</a>
                 <a href="{{ route('admin.wallets') }}">عملیات کیف پول</a>
                 <a href="{{ route('admin.payments') }}">پرداخت‌ها</a>
+                <a href="{{ route('admin.products') }}">محصولات و پلن‌ها</a>
+                <a href="{{ route('admin.coupons') }}">کدهای تخفیف</a>
+                <a href="{{ route('admin.tickets') }}">تیکت‌ها</a>
             @endif
         </nav>
     </aside>

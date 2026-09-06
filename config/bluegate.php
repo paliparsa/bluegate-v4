@@ -17,6 +17,16 @@ return [
  ],
  'telegram' => [
   'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+  'bot_username' => env('TELEGRAM_BOT_USERNAME'),
   'admin_chat_id' => env('TELEGRAM_ADMIN_CHAT_ID'),
+  'webhook_secret' => env('TELEGRAM_WEBHOOK_SECRET'),
+ ],
+ 'referral' => [
+  'rate' => env('BLUEGATE_REFERRAL_RATE',10),
+  'eligible_orders' => env('BLUEGATE_REFERRAL_ELIGIBLE_ORDERS',3),
+ ],
+ 'trial' => [
+  'block_reused_ip' => env('BLUEGATE_TRIAL_BLOCK_REUSED_IP',true),
+  'block_reused_fingerprint' => env('BLUEGATE_TRIAL_BLOCK_REUSED_FINGERPRINT',true),
  ],
 ];

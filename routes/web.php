@@ -8,6 +8,11 @@ use App\Http\Controllers\App\CheckoutController;
 use App\Http\Controllers\App\PaymentController;
 use App\Http\Controllers\App\ServiceOperationController;
 use App\Http\Controllers\Admin\OperationsController;
+use App\Http\Controllers\Admin\CommerceController;
+use App\Http\Controllers\App\GrowthController;
+use App\Http\Controllers\App\TicketController;
+use App\Http\Controllers\App\TelegramLinkController;
+use App\Http\Controllers\TelegramWebhookController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +45,15 @@ Route::prefix('app')->middleware('auth')->name('app.')->group(function(){
  Route::post('/services/{id}/renew',[ServiceOperationController::class,'renew'])->name('services.renew');
  Route::post('/services/{id}/traffic',[ServiceOperationController::class,'traffic'])->name('services.traffic');
  Route::post('/services/{id}/location',[ServiceOperationController::class,'location'])->name('services.location');
+ Route::get('/referral',[GrowthController::class,'referral'])->name('referral');
+ Route::post('/trial',[GrowthController::class,'trial'])->name('trial.claim');
+ Route::get('/notifications',[GrowthController::class,'notifications'])->name('notifications');
+ Route::post('/notifications/{id}/read',[GrowthController::class,'readNotification'])->name('notifications.read');
+ Route::get('/tickets',[TicketController::class,'index'])->name('tickets');
+ Route::post('/tickets',[TicketController::class,'store'])->name('tickets.store');
+ Route::get('/tickets/{id}',[TicketController::class,'show'])->name('tickets.show');
+ Route::post('/tickets/{id}/reply',[TicketController::class,'reply'])->name('tickets.reply');
+ Route::post('/telegram/link',[TelegramLinkController::class,'create'])->name('telegram.link');
 });
 Route::get('/payments/zarinpal/callback/{payment}/{token}',[PaymentController::class,'callback'])->name('payments.zarinpal.callback');
 
@@ -51,7 +65,20 @@ Route::prefix('admin')->middleware(['auth','admin'])->name('admin.')->group(func
  Route::post('/nodes/{node}/sync',[OperationsController::class,'sync'])->name('nodes.sync');
  Route::get('/wallets',[OperationsController::class,'wallets'])->name('wallets');
  Route::post('/wallets/credit',[OperationsController::class,'credit'])->name('wallets.credit');
- Route::get('/products',[AdminController::class,'products'])->name('products');
+ Route::get('/products',[CommerceController::class,'products'])->name('products');
+ Route::post('/products',[CommerceController::class,'storeProduct'])->name('products.store');
+ Route::put('/products/{id}',[CommerceController::class,'updateProduct'])->name('products.update');
+ Route::post('/plans',[CommerceController::class,'storePlan'])->name('plans.store');
+ Route::put('/plans/{id}',[CommerceController::class,'updatePlan'])->name('plans.update');
+ Route::get('/coupons',[CommerceController::class,'coupons'])->name('coupons');
+ Route::post('/coupons',[CommerceController::class,'storeCoupon'])->name('coupons.store');
+ Route::post('/coupons/{id}/toggle',[CommerceController::class,'toggleCoupon'])->name('coupons.toggle');
+ Route::get('/tickets',[CommerceController::class,'tickets'])->name('tickets');
+ Route::get('/tickets/{id}',[CommerceController::class,'ticket'])->name('tickets.show');
+ Route::post('/tickets/{id}/reply',[CommerceController::class,'replyTicket'])->name('tickets.reply');
  Route::get('/payments',[AdminController::class,'payments'])->name('payments');
 });
+Route::post('/telegram/webhook/{secret}',TelegramWebhookController::class)
+ ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
+ ->name('telegram.webhook');
 require __DIR__.'/subscription.php';

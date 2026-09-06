@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers\App;
 use App\Domain\Notifications\TelegramNotifier;
+use App\Domain\Notifications\NotificationService;
+use App\Domain\Growth\ReferralService;
+use App\Domain\Wallet\WalletService;
 use App\Domain\Payments\ZarinpalGateway;
 use App\Domain\Provisioning\ProvisionService;
 use App\Http\Controllers\Controller;
@@ -39,7 +42,7 @@ final class PaymentController extends Controller {
   }catch(\Throwable $e){ report($e); return back()->with('error','اتصال به درگاه ناموفق بود: '.$e->getMessage()); }
  }
 
- public function callback(Request $request,string $payment,string $token,ZarinpalGateway $gateway,ProvisionService $provisioner,TelegramNotifier $telegram){
+ public function callback(Request $request,string $payment,string $token,ZarinpalGateway $gateway,ProvisionService $provisioner,TelegramNotifier $telegram,ReferralService $referrals,WalletService $wallets,NotificationService $notifications){
   $p=DB::table('payments')->where('id',$payment)->where('callback_token',$token)->firstOrFail();
   $order=DB::table('orders')->where('id',$p->order_id)->firstOrFail();
   $user=User::find($p->user_id);
@@ -65,6 +68,8 @@ final class PaymentController extends Controller {
    });
    try{
     $service=$provisioner->fromOrder($order->id);
+    $referrals->settleOrder($order->id,$wallets);
+    $notifications->create($user->id,'پرداخت و تحویل موفق','سفارش '.$order->order_number.' تایید و سرویس فعال شد.','success',route('app.services'));
     $telegram->send($user,"✅ <b>پرداخت و تحویل سرویس موفق</b>\nسفارش: <code>{$order->order_number}</code>\nمبلغ: ".number_format((float)$p->amount)." تومان");
     return redirect()->route(auth()->check()?'app.services':'login')->with('success','پرداخت تایید و سرویس با موفقیت ساخته شد.');
    }catch(\Throwable $provisionError){

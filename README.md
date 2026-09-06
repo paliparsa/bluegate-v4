@@ -568,3 +568,83 @@ BLUEGATE_LOCATION_CHANGE_PRICE=0
 ### Phase 4.2 hotfix
 
 رفع Rollback کاذب با exit code 141 در تشخیص PHP-FPM. علت، ترکیب `set -o pipefail` با `awk ... exit` بود که باعث SIGPIPE در `systemctl` می‌شد. تشخیص سرویس PHP-FPM اکنون بدون early-exit انجام می‌شود و fallback برای php8.4/8.3/8.2/8.1 دارد.
+
+
+---
+
+## Phase 5 — Growth + Support + Catalog
+
+Phase 5 لایه فروش و پشتیبانی BlueGate را کامل‌تر می‌کند:
+
+- Coupon Engine درصدی/ثابت
+- محدودیت تعداد استفاده، هر کاربر، حداقل سفارش، تاریخ شروع/پایان و سقف تخفیف
+- Referral code برای هر کاربر
+- Referral link روی Register
+- اعتبار خودکار معرف برای خریدهای واجد شرایط
+- پیش‌فرض: 10% برای 3 خرید اول کاربر معرفی‌شده
+- Trial واقعی با Provisioning روی 3x-ui
+- انتخاب Trial Plan از Admin با `trial_enabled`
+- محدودیت یک Trial برای User و محافظت IP/Fingerprint
+- Ticket Center کاربر
+- Support Desk ادمین + پاسخ و بستن Ticket
+- Notification Center داخل پنل
+- Telegram account linking با deep-link یک‌بارمصرف
+- Telegram Webhook hook
+- Catalog CRUD برای Product / Plan / Price / Trial
+- Coupon Center در Admin
+
+### Referral
+
+مقادیر پیش‌فرض:
+
+```env
+BLUEGATE_REFERRAL_RATE=10
+BLUEGATE_REFERRAL_ELIGIBLE_ORDERS=3
+```
+
+Commission بعد از پرداخت و Provisioning موفق به Wallet معرف Credit می‌شود و `order_id` unique است، بنابراین دوباره پرداخت نمی‌شود.
+
+### Trial
+
+در `/admin/products` فقط برای پلنی که می‌خواهی به‌عنوان تست ارائه شود `Trial` را فعال کن. بهتر است این پلن حجم و مدت کوتاه داشته باشد.
+
+```env
+BLUEGATE_TRIAL_BLOCK_REUSED_IP=true
+BLUEGATE_TRIAL_BLOCK_REUSED_FINGERPRINT=true
+```
+
+### Telegram account linking
+
+`.env`:
+
+```env
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_BOT_USERNAME=
+TELEGRAM_ADMIN_CHAT_ID=
+TELEGRAM_WEBHOOK_SECRET=A_LONG_RANDOM_SECRET
+```
+
+بعد از config cache، Webhook بات را روی این آدرس ثبت کن:
+
+```text
+https://YOUR_DOMAIN/telegram/webhook/YOUR_TELEGRAM_WEBHOOK_SECRET
+```
+
+کاربر از بخش «دعوت دوستان» لینک اتصال موقت می‌سازد؛ لینک 20 دقیقه اعتبار دارد و `/start TOKEN` شناسه Telegram را به همان User متصل می‌کند.
+
+### صفحات جدید
+
+User:
+- `/app/referral`
+- `/app/tickets`
+- `/app/notifications`
+- Trial action در `/app/buy`
+
+Admin:
+- `/admin/products`
+- `/admin/coupons`
+- `/admin/tickets`
+
+### نکته Deployment
+
+Phase 5 بر پایه Phase 4.2 ساخته شده و Hotfix تشخیص PHP-FPM بدون SIGPIPE/exit 141 را حفظ می‌کند.

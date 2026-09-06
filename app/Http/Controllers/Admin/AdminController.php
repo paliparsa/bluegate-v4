@@ -4,7 +4,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 class AdminController extends Controller {
  public function dashboard(){
-  $stats=['users'=>DB::table('users')->count(),'services'=>DB::table('services')->where('status','active')->count(),'orders'=>DB::table('orders')->count(),'nodes'=>DB::table('nodes')->count()];
+  $stats=['users'=>DB::table('users')->count(),'services'=>DB::table('services')->where('status','active')->count(),'orders'=>DB::table('orders')->count(),'nodes'=>DB::table('nodes')->count(),
+   'open_tickets'=>DB::table('tickets')->whereIn('status',['open','answered'])->count(),'coupons'=>DB::table('coupons')->where('active',true)->count(),
+   'referral_paid'=>DB::table('referral_commissions')->where('status','credited')->sum('commission')];
   return view('admin.dashboard',compact('stats'));
  }
  public function nodes(){ $nodes=DB::table('nodes')->leftJoin('locations','locations.id','=','nodes.location_id')->select('nodes.*','locations.name as location_name')->latest('nodes.created_at')->paginate(25); return view('admin.nodes',compact('nodes')); }
