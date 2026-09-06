@@ -33,13 +33,16 @@ class ShopController extends Controller
 
         // Only show locations that currently have at least one sellable, healthy node.
         $locations = DB::table('locations as l')
-            ->join('nodes as n', 'n.location_id', '=', 'l.id')
             ->where('l.active', true)
-            ->where('n.sales_enabled', true)
-            ->where('n.maintenance_mode', false)
-            ->where('n.status', 'online')
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('nodes as n')
+                    ->whereColumn('n.location_id', 'l.id')
+                    ->where('n.sales_enabled', true)
+                    ->where('n.maintenance_mode', false)
+                    ->where('n.status', 'online');
+            })
             ->select('l.id', 'l.name', 'l.city', 'l.country_code', 'l.flag', 'l.service_type')
-            ->distinct()
             ->orderBy('l.sort_order')
             ->get();
 
@@ -67,12 +70,16 @@ class ShopController extends Controller
                 }
 
                 $location = DB::table('locations as l')
-                    ->join('nodes as n', 'n.location_id', '=', 'l.id')
                     ->where('l.id', $data['location_id'])
                     ->where('l.active', true)
-                    ->where('n.sales_enabled', true)
-                    ->where('n.maintenance_mode', false)
-                    ->where('n.status', 'online')
+                    ->whereExists(function ($query) {
+                        $query->select(DB::raw(1))
+                            ->from('nodes as n')
+                            ->whereColumn('n.location_id', 'l.id')
+                            ->where('n.sales_enabled', true)
+                            ->where('n.maintenance_mode', false)
+                            ->where('n.status', 'online');
+                    })
                     ->select('l.id', 'l.name', 'l.city', 'l.country_code', 'l.flag')
                     ->first();
 
