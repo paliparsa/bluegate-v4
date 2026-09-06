@@ -23,6 +23,24 @@ STAGE_DIR="${DEPLOY_ROOT}/stage-${STAMP}"
 BACKUP_DIR="${DEPLOY_ROOT}/backup-${STAMP}"
 OLD_APP_MOVED=0
 SWAPPED=0
+FAILED_LINE=""
+FAILED_COMMAND=""
+FAILED_CODE=""
+DEPLOY_LOG="/var/log/bluegate-deploy.log"
+mkdir -p "$(dirname "$DEPLOY_LOG")"
+touch "$DEPLOY_LOG"
+chmod 640 "$DEPLOY_LOG" || true
+
+exec > >(tee -a "$DEPLOY_LOG") 2>&1
+
+on_error() {
+  FAILED_CODE=$?
+  FAILED_LINE="${BASH_LINENO[0]:-unknown}"
+  FAILED_COMMAND="${BASH_COMMAND:-unknown}"
+  printf "${RED}[DEPLOY FAILED]${NC} line=%s exit=%s command=%q\n" "$FAILED_LINE" "$FAILED_CODE" "$FAILED_COMMAND" >&2
+  return "$FAILED_CODE"
+}
+trap on_error ERR
 
 mkdir -p "$DEPLOY_ROOT"
 exec 9>"$LOCK_FILE"
@@ -43,6 +61,9 @@ rollback() {
   fi
 
   printf "${RED}[ROLLBACK]${NC} Update failed. Restoring previous application...\n" >&2
+  if [[ -n "${FAILED_COMMAND:-}" ]]; then
+    printf "${RED}[CAUSE]${NC} line=%s exit=%s command=%s\n" "${FAILED_LINE:-unknown}" "${FAILED_CODE:-$code}" "${FAILED_COMMAND}" >&2
+  fi
 
   if [[ $SWAPPED -eq 1 ]]; then
     rm -rf "$APP_DIR.failed" 2>/dev/null || true
@@ -118,7 +139,9 @@ php artisan route:cache >/dev/null
 # Database migrations are run only after the new code has passed static/runtime boot checks.
 # BlueGate migrations must remain backward-compatible/additive so rollback to the previous code is safe.
 log "Applying database migrations..."
+php artisan migrate:status || true
 php artisan migrate --force
+log "Seeding catalog..."
 php artisan db:seed --force
 
 chown -R www-data:www-data "$STAGE_DIR"
@@ -175,5 +198,6 @@ SWAPPED=0
 OLD_APP_MOVED=0
 trap - EXIT
 
+php artisan migrate:status || true
 printf "${GREEN}[OK]${NC} BlueGate updated successfully to %s\n" "$NEW_COMMIT"
 printf "${GREEN}[OK]${NC} Previous release backup: %s\n" "$BACKUP_DIR"
