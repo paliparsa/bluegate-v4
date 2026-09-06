@@ -563,3 +563,8 @@ BLUEGATE_LOCATION_CHANGE_PRICE=0
 6. `/admin/payments` را برای authority/ref id/status بررسی کن.
 
 > Endpointهای 3x-ui در بعضی fork/versionها متفاوت‌اند. Update/Delete Client در Adapter مستقل قرار دارد تا در صورت تفاوت نسخه پنل فقط Provider تغییر کند.
+
+
+### Phase 4.2 hotfix
+
+رفع Rollback کاذب با exit code 141 در تشخیص PHP-FPM. علت، ترکیب `set -o pipefail` با `awk ... exit` بود که باعث SIGPIPE در `systemctl` می‌شد. تشخیص سرویس PHP-FPM اکنون بدون early-exit انجام می‌شود و fallback برای php8.4/8.3/8.2/8.1 دارد.

@@ -168,7 +168,7 @@ supervisorctl reread >/dev/null
 supervisorctl update >/dev/null
 supervisorctl restart 'bluegate-worker:*' >/dev/null 2>&1 || true
 
-PHP_FPM_SERVICE="$(systemctl list-unit-files --type=service | awk '/^php[0-9.]+-fpm\.service/{print $1; exit}')"
+PHP_FPM_SERVICE="$(systemctl list-unit-files --type=service --no-legend 2>/dev/null | awk '/^php[0-9.]+-fpm\.service/{svc=$1} END{print svc}')"
 [[ -n "$PHP_FPM_SERVICE" ]] && systemctl reload "$PHP_FPM_SERVICE" || true
 nginx -t >/dev/null
 systemctl reload nginx
