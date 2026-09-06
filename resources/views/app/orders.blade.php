@@ -1,3 +1,6 @@
 @extends('layouts.app')
 @section('title','سفارش‌ها — BlueGate')
-@section('content')<div class="top-title"><div><h2>سفارش‌ها</h2><div class="muted">تاریخچه خریدها</div></div></div><div class="card table-wrap">@if($orders->count())<table class="table"><tr><th>شماره</th><th>وضعیت</th><th>مبلغ</th><th>تاریخ</th></tr>@foreach($orders as $o)<tr><td>{{ $o->order_number }}</td><td>{{ $o->status }}</td><td>{{ number_format((float)$o->payable) }} تومان</td><td>{{ $o->created_at }}</td></tr>@endforeach</table><div style="padding:14px">{{ $orders->links() }}</div>@else<div class="empty">سفارشی نداری.</div>@endif</div>@endsection
+@section('content')
+<div class="top-title"><div><h2>سفارش‌ها</h2><div class="muted">تاریخچه خریدها</div></div></div><div class="card table-wrap">@if($orders->count())<table class="table"><tr><th>شماره</th><th>وضعیت</th><th>مبلغ</th><th>تاریخ</th></tr>@foreach($orders as $o)<tr><td>{{ $o->order_number }}</td><td>{{ $o->status }}</td><td>{{ number_format((float)$o->payable) }} تومان</td><td>{{ $o->created_at }}</td></tr>@endforeach</table><div style="padding:14px">{{ $orders->links() }}</div>@else<div class="empty">سفارشی نداری.</div>@endif</div>
+@endsection
+
