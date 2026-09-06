@@ -4,9 +4,8 @@
 
 <div class="top-title">
  <div>
-  <span class="muted" style="font-size:11px">BLUEPING SETUP CENTER</span>
-  <h2>اتصال در چند مرحله ساده</h2>
-  <div class="muted">دستگاهت رو انتخاب کن، Hiddify رو نصب کن و Subscription سرویس رو وارد کن.</div>
+  <h2>راهنمای اتصال</h2>
+  <div class="muted">دستگاهت رو انتخاب کن و مراحل رو انجام بده.</div>
  </div>
  @if($selected)<a class="btn ghost" href="{{ route('app.services.show',$selected->id) }}">بازگشت به سرویس</a>@endif
 </div>
@@ -32,9 +31,8 @@
 
 <div class="setup-hero">
  <section class="card">
-  <div class="admin-kicker">RECOMMENDED CLIENT</div>
-  <h2 style="margin:7px 0">Hiddify</h2>
-  <p class="muted" style="line-height:1.9">برای اینکه آموزش بین دستگاه‌ها یکدست باشه، BlueGate فعلاً Hiddify رو به‌عنوان کلاینت پیشنهادی معرفی می‌کنه. Subscription لینک BlueGate رو مستقیماً می‌تونی داخلش Import کنی.</p>
+  <h2 style="margin:0 0 6px">Hiddify</h2>
+  <p class="muted" style="line-height:1.8;font-size:12px">کلاینت پیشنهادی برای اتصال به BluePing.</p>
 
   <div class="platform-grid" style="margin-top:17px">
    <a class="platform-card" href="https://play.google.com/store/apps/details?id=app.hiddify.com" target="_blank" rel="noopener noreferrer">
@@ -53,10 +51,10 @@
  </section>
 
  <aside class="quick-connect-card">
-  <div class="admin-kicker">QUICK CONNECT</div>
-  <h2 style="margin:7px 0">{{ $selectedProduct->name ?? 'BluePing Service' }}</h2>
+  <div class="eyebrow">اتصال سریع</div>
+  <h2 style="margin:7px 0">{{ $selectedProduct->name ?? 'BluePing' }}</h2>
   @if($subscriptionUrl)
-   <p class="muted">اگر Hiddify روی دستگاه نصب است، اول One‑Click Import را امتحان کن. اگر باز نشد، Subscription را کپی کن و دستی Import کن.</p>
+   <p class="muted" style="font-size:12px">Hiddify نصب داری؟ مستقیم بازش کن. در غیر این صورت لینک رو کپی کن.</p>
    <div class="quick-connect-actions">
     <a class="btn primary" href="{{ $hiddifyDeepLink }}">باز کردن در Hiddify</a>
     <button class="btn" type="button" onclick="copySetupSub(this)">کپی Subscription</button>
@@ -70,7 +68,6 @@
 </div>
 
 <section class="section">
- <div class="admin-kicker">DEVICE GUIDE</div>
  <h2>دستگاهت رو انتخاب کن</h2>
  <div class="device-tabs">
   <button class="device-tab active" type="button" data-device="android">🤖 Android</button>
@@ -124,7 +121,7 @@
 
 <section class="section">
  <div class="card">
-  <div class="service-head"><div><div class="admin-kicker">TROUBLESHOOTING</div><h3 style="margin-top:5px">وصل نشد؟ این سه مورد رو اول چک کن</h3></div><a class="btn ghost" href="{{ route('app.tickets') }}">ارسال تیکت</a></div>
+  <div class="service-head"><div><h3 style="margin:0">وصل نشد؟</h3></div><a class="btn ghost" href="{{ route('app.tickets') }}">پشتیبانی</a></div>
   <div class="feature-strip">
    <div class="feature"><b>1. Update Profile</b><span class="muted">Subscription رو Refresh/Update کن تا آخرین مسیرها دریافت بشن.</span></div>
    <div class="feature"><b>2. Change Location</b><span class="muted">از صفحه سرویس یک لوکیشن دیگه انتخاب کن و دوباره تست کن.</span></div>

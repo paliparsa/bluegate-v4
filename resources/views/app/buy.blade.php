@@ -2,13 +2,13 @@
 @section('title','خرید BluePing — BlueGate')
 @section('content')
 <div class="top-title">
- <div><span class="muted" style="font-size:11px">BLUEPING PURCHASE BUILDER</span><h2>سرویس رو بر اساس نیازت بساز</h2><div class="muted">Standard یا Pro، سپس مدت، حجم، دستگاه و لوکیشن؛ قیمت نهایی از پلن واقعی Catalog انتخاب می‌شود.</div></div>
+ <div><h2>خرید سرویس</h2><div class="muted">پلن و لوکیشن رو انتخاب کن.</div></div>
  <form method="post" action="{{ route('app.trial.claim') }}">@csrf<button class="btn">تست رایگان</button></form>
 </div>
 
 <div class="recommend-box">
- <div class="service-head"><div><div class="admin-kicker">SMART RECOMMENDATION</div><h3 style="margin:5px 0">نمی‌دونی Standard یا Pro؟</h3></div><span class="pill">۱۰ ثانیه</span></div>
- <p class="muted">فقط اولویتت رو بگو؛ انتخاب پیشنهادی روی Builder اعمال میشه.</p>
+ <div class="service-head"><div><h3 style="margin:0">Standard یا Pro؟</h3></div></div>
+ <p class="muted" style="font-size:12px">اگر مطمئن نیستی، نزدیک‌ترین گزینه به استفاده‌ات رو بزن.</p>
  <div class="recommend-actions">
   <button type="button" class="btn ghost rec-btn" data-rec="standard">قیمت اقتصادی مهم‌تره</button>
   <button type="button" class="btn ghost rec-btn" data-rec="standard">استفاده روزمره دارم</button>
@@ -50,22 +50,22 @@ $catalog = $products->map(function($product) use ($plans) {
   </div>
 
   <div class="step">
-   <div class="step-head"><div><span class="step-num">2</span> <strong>مدت سرویس</strong></div><span class="muted">بر اساس پلن‌های موجود</span></div>
+   <div class="step-head"><div><span class="step-num">2</span> <strong>مدت سرویس</strong></div></div>
    <div id="durationChoices" class="choice-row"></div>
   </div>
 
   <div class="step">
-   <div class="step-head"><div><span class="step-num">3</span> <strong>حجم</strong></div><span class="muted">ترافیک پلن</span></div>
+   <div class="step-head"><div><span class="step-num">3</span> <strong>حجم</strong></div></div>
    <div id="trafficChoices" class="choice-row"></div>
   </div>
 
   <div class="step">
-   <div class="step-head"><div><span class="step-num">4</span> <strong>تعداد دستگاه</strong></div><span class="muted">Device limit</span></div>
+   <div class="step-head"><div><span class="step-num">4</span> <strong>تعداد دستگاه</strong></div></div>
    <div id="deviceChoices" class="choice-row"></div>
   </div>
 
   <div class="step">
-   <div class="step-head"><div><span class="step-num">5</span> <strong>لوکیشن</strong></div><span class="muted">Node توسط BlueGate انتخاب می‌شود</span></div>
+   <div class="step-head"><div><span class="step-num">5</span> <strong>لوکیشن</strong></div></div>
    @if($locations->count())
    <div class="choice-grid" id="locationChoices">
     @foreach($locations as $loc)
@@ -87,7 +87,7 @@ $catalog = $products->map(function($product) use ($plans) {
  </div>
 
  <aside class="card builder-summary">
-  <div class="admin-kicker">ORDER SUMMARY</div>
+  <div class="eyebrow">خلاصه سفارش</div>
   <div id="summaryProduct" class="summary-product">—</div>
   <div id="summaryPlan" class="muted">پلن را انتخاب کن</div>
   <div id="summaryPrice" class="summary-price">— <small>تومان</small></div>
@@ -97,8 +97,8 @@ $catalog = $products->map(function($product) use ($plans) {
    <div class="summary-line"><span>دستگاه</span><strong id="summaryDevice">—</strong></div>
    <div class="summary-line"><span>لوکیشن</span><strong id="summaryLocation">—</strong></div>
   </div>
-  <div class="builder-alert" style="margin:15px 0">BlueGate فقط لوکیشن را از تو می‌گیرد؛ انتخاب Node سالم و کم‌بار پشت صحنه انجام می‌شود.</div>
-  <button id="submitBuilder" class="btn primary" style="width:100%" disabled>ساخت سفارش</button>
+  <div class="builder-alert" style="margin:15px 0">بهترین مسیر داخل لوکیشن انتخابی به‌صورت خودکار انتخاب میشه.</div>
+  <button id="submitBuilder" class="btn primary" style="width:100%" disabled>ادامه و پرداخت</button>
   <div id="builderHint" class="muted" style="font-size:11px;text-align:center;margin-top:10px">انتخاب‌ها را کامل کن.</div>
  </aside>
 </div>
