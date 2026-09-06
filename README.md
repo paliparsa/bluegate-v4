@@ -408,3 +408,17 @@ git push -u origin main
 8. Renewal / Add Traffic / Reset Subscription / Change Location
 9. Admin Panel
 10. Telegram Bot / Tickets / Referral / Reseller
+
+## Troubleshooting: SQLite driver / stale composer.lock during install
+
+If an older installer stops with errors similar to:
+
+```text
+could not find driver (Connection: sqlite ...)
+Required package "laravel/sanctum" is not present in the lock file.
+Required package "predis/predis" is not present in the lock file.
+```
+
+Update the repository to the latest installer and run the one-line installer again. The current installer creates the Laravel base with Composer scripts disabled, overlays BlueGate first, resolves BlueGate dependencies, writes the PostgreSQL `.env`, and only then runs package discovery and migrations.
+
+Do **not** fix this by enabling SQLite in production; BlueGate uses PostgreSQL.

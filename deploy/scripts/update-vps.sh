@@ -32,7 +32,13 @@ log "Syncing application overlay..."
 rsync -a --exclude='.git' --exclude='.env' "$SOURCE_DIR/" "$APP_DIR/"
 
 log "Installing production dependencies..."
-COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir="$APP_DIR" --no-dev --prefer-dist --optimize-autoloader --no-interaction
+if [[ -f "$APP_DIR/composer.lock" ]] && COMPOSER_ALLOW_SUPERUSER=1 composer validate --working-dir="$APP_DIR" --no-check-publish --no-interaction >/tmp/bluegate-composer-validate.log 2>&1; then
+  COMPOSER_ALLOW_SUPERUSER=1 composer install --working-dir="$APP_DIR" --no-dev --prefer-dist --optimize-autoloader --no-interaction
+else
+  printf '\033[1;33m[WARN]\033[0m composer.lock is missing/stale; refreshing it before update.\n'
+  rm -f "$APP_DIR/composer.lock"
+  COMPOSER_ALLOW_SUPERUSER=1 composer update --working-dir="$APP_DIR" --no-dev --prefer-dist --optimize-autoloader --no-interaction
+fi
 
 log "Applying database migrations..."
 cd "$APP_DIR"

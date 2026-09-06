@@ -96,7 +96,7 @@ SQL
 log "4/10 Building Laravel application..."
 TMP="$(mktemp -d)"
 trap 'rm -rf "${TMP:-}"' EXIT
-COMPOSER_ALLOW_SUPERUSER=1 composer create-project laravel/laravel:^12.0 "$TMP/base" --no-interaction --prefer-dist
+COMPOSER_ALLOW_SUPERUSER=1 composer create-project laravel/laravel:^12.0 "$TMP/base" --no-interaction --prefer-dist --no-scripts
 
 # Preserve the old .env during an in-place reinstall unless explicitly overridden.
 OLD_ENV=""
@@ -110,7 +110,19 @@ mkdir -p "$APP_DIR"
 rsync -a --delete --exclude='.env' "$TMP/base/" "$APP_DIR/"
 rsync -a --exclude='.git' --exclude='.env' "$PROJECT_SOURCE/" "$APP_DIR/"
 cd "$APP_DIR"
-COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+
+# The BlueGate overlay has its own composer.json. A freshly-created Laravel
+# composer.lock belongs to the base skeleton and must not be trusted for the
+# overlay dependencies. If the repository ships a compatible lock file we use
+# it; otherwise resolve dependencies once and create a fresh lock file.
+if [[ -f composer.lock ]] && COMPOSER_ALLOW_SUPERUSER=1 composer validate --no-check-publish --no-interaction >/tmp/bluegate-composer-validate.log 2>&1; then
+  log "Installing locked BlueGate dependencies..."
+  COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+else
+  warn "composer.lock is missing or stale; resolving BlueGate dependencies and generating a fresh lock file."
+  rm -f composer.lock
+  COMPOSER_ALLOW_SUPERUSER=1 composer update --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+fi
 
 if [[ -n "$OLD_ENV" && -s "$OLD_ENV" ]]; then
   cp "$OLD_ENV" .env
@@ -147,6 +159,11 @@ if ! grep -q '^BLUEGATE_TOKEN_PEPPER=' .env; then
 fi
 
 if ! grep -qE '^APP_KEY=base64:.+' .env; then php artisan key:generate --force; fi
+
+# Run package discovery only after the production .env is ready. This prevents
+# Laravel's default SQLite bootstrap scripts from running during installation.
+COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --optimize --no-dev --no-interaction
+php artisan package:discover --ansi
 php artisan migrate --force
 php artisan storage:link >/dev/null 2>&1 || true
 php artisan optimize
