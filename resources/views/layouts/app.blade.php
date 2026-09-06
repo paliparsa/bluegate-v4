@@ -7,6 +7,7 @@
   <div class="side-section">حساب من</div>
   <a class="{{ request()->routeIs('app.dashboard')?'active':'' }}" href="{{ route('app.dashboard') }}">خانه</a>
   <a class="{{ request()->routeIs('app.services*')?'active':'' }}" href="{{ route('app.services') }}">سرویس‌های من</a>
+  <a class="{{ request()->routeIs('app.setup')?'active':'' }}" href="{{ route('app.setup') }}">راهنمای اتصال</a>
   <a class="{{ request()->routeIs('app.buy*')?'active':'' }}" href="{{ route('app.buy') }}">خرید سرویس</a>
   <a class="{{ request()->routeIs('app.wallet*')?'active':'' }}" href="{{ route('app.wallet') }}">کیف پول</a>
   <a class="{{ request()->routeIs('app.orders*')?'active':'' }}" href="{{ route('app.orders') }}">سفارش‌ها</a>

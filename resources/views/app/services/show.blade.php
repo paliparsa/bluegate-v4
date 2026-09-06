@@ -20,8 +20,10 @@
  <p class="muted">لینک اختصاصی BlueGate؛ جزئیات 3x-ui برای کاربر مخفی می‌ماند.</p>
  <div class="sub-box"><input id="suburl" class="input" readonly value="{{ $subscriptionUrl }}">
  <div style="display:flex;gap:10px;flex-wrap:wrap">
-  <button class="btn primary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('suburl').value);this.innerText='کپی شد ✓'">Copy Subscription</button>
+  @if($hiddifyDeepLink)<a class="btn primary" href="{{ $hiddifyDeepLink }}">Open in Hiddify</a>@endif
+  <button class="btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('suburl').value);this.innerText='کپی شد ✓'">Copy Subscription</button>
   <button class="btn" type="button" onclick="toggleQr()">QR Code</button>
+  <a class="btn ghost" href="{{ route('app.setup',['service'=>$s->id]) }}">راهنمای اتصال</a>
  </div></div>
  <div id="qrbox" style="display:none;margin-top:18px;background:#fff;width:max-content;padding:14px;border-radius:14px"><div id="qrcode"></div></div>
 @else <p class="muted">Subscription هنوز برای این سرویس ساخته نشده است.</p> @endif
