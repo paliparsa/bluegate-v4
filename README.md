@@ -865,3 +865,39 @@ sudo -u www-data php artisan config:cache
 - Design primitives اختصاصی برای Admin و Developer screens
 - تمام routeها و form actionهای قبلی حفظ شده‌اند
 - Hotfixهای updater و Failover Phase 6 همچنان حفظ شده‌اند
+
+
+---
+
+## Phase 7.3 — Service-first Landing & VPN Positioning
+
+این فاز Landing را از یک معرفی عمومی SaaS به صفحه فروش واقعی سرویس‌های BluePing تبدیل می‌کند.
+
+مبنای محتوایی: معرفی‌های عمومی کانال Telegram `@BllueGate` در زمان طراحی این نسخه.
+
+### Positioning
+
+- Standard: سرویس اقتصادی برای استفاده روزمره
+- Pro: سطح بالاتر با لوکیشن‌های Sweden / UK / Türkiye و مسیر Germany Pro
+- Tunnel: مسیر ویژه‌تر برای شرایط اختلال
+- Emergency / ملی: سرویس Backup؛ خرید مستقیم ملی تا پایان حجم محدودیت زمانی ندارد
+
+### Landing sections
+
+- Hero مبتنی بر انتخاب سرویس
+- Network route visual
+- Service selector
+- Comparison matrix
+- Real-world scenarios
+- Emergency / disruption explanation
+- Dynamic catalog plans
+- BlueGate ecosystem
+- FAQ
+- Support CTA
+
+### Important
+
+قیمت‌های Landing همچنان از دیتابیس Catalog خوانده می‌شوند و داخل View hard-code نشده‌اند.
+متن Marketing با Product positioning کانال هماهنگ شده، اما وضعیت لحظه‌ای اینترنت یا ادعای تضمین اتصال در Landing hard-code نشده است.
+
+Store نیز یک راهنمای سریع Standard / Pro / Tunnel-Emergency دارد.

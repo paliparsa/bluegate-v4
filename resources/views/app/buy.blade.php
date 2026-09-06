@@ -2,7 +2,7 @@
 @section('title','خرید سرویس — BlueGate')
 @section('content')
 <div class="top-title">
- <div><span class="muted" style="font-size:11px">BLUEPING STORE</span><h2>یک پلن انتخاب کن</h2><div class="muted">سرویس بعد از پرداخت به‌صورت خودکار آماده می‌شود.</div></div>
+ <div><span class="muted" style="font-size:11px">BLUEPING STORE</span><h2>سرویس مناسب شرایطت رو انتخاب کن</h2><div class="muted">Standard برای مصرف اقتصادی · Pro برای پایداری بیشتر · Tunnel/Emergency برای شرایط اختلال.</div></div>
  <form method="post" action="{{ route('app.trial.claim') }}">@csrf<button class="btn">دریافت تست رایگان</button></form>
 </div>
 @foreach($products as $product)
