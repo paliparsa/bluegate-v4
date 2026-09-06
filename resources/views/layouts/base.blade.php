@@ -58,7 +58,7 @@ a{text-decoration:none;color:inherit}button,input,select,textarea{font:inherit}.
 <body>
 <header class="container"><nav class="nav">
 <a class="brand" href="/"><i class="brand-mark"></i><span>Blue</span>Gate</a>
-<div class="landing-nav hide-sm"><a href="/#services">سرویس‌ها</a><a href="/#compare">مقایسه</a><a href="/#emergency">شرایط اختلال</a><a href="/#faq">سوالات</a></div>
+<div class="landing-nav hide-sm"><a href="/#services">سرویس‌ها</a><a href="/#compare">مقایسه</a><a href="/#faq">سوالات</a></div>
 <div class="navlinks">@auth<a class="btn ghost hide-sm" href="{{ route('app.dashboard') }}">داشبورد</a>
 <form method="post" action="{{ route('logout') }}">@csrf<button class="btn" type="submit">خروج</button></form>
 @else<a class="btn ghost" href="{{ route('login') }}">ورود</a><a class="btn primary" href="{{ route('register') }}">ساخت حساب</a>@endauth</div>
