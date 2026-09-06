@@ -28,7 +28,9 @@ final class ProvisionService {
     'attempts'=>1,'created_at'=>now(),'updated_at'=>now()
    ]); else DB::table('provisioning_operations')->where('id',$existing->id)->update(['status'=>'running','attempts'=>DB::raw('attempts+1'),'updated_at'=>now()]);
 
-   $node=$this->selector->select();
+   $configuration=json_decode($item->configuration ?? '{}',true) ?: [];
+   $requestedLocationId=$configuration['location_id'] ?? null;
+   $node=$this->selector->select($requestedLocationId);
    $inbound=DB::table('inbounds')->where('node_id',$node->id)->where('active',true)->orderBy('created_at')->first();
    if(!$inbound) throw new RuntimeException('No active inbound exists on selected node');
 
