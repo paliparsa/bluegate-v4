@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 [[ ${EUID:-$(id -u)} -eq 0 ]] || { echo "[ERROR] Run with sudo/root."; exit 1; }
+
+# Never inherit a deleted/stale working directory from the interactive shell.
+# Atomic releases may move/remove /var/www/bluegate while an SSH session is still cd'ed into it.
+cd / || { echo "[ERROR] Cannot switch to a safe working directory."; exit 1; }
 [[ -f /etc/bluegate/install.env ]] || { echo "[ERROR] /etc/bluegate/install.env missing."; exit 1; }
 # shellcheck disable=SC1091
 source /etc/bluegate/install.env

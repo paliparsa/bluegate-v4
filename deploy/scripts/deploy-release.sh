@@ -7,6 +7,10 @@ warn() { printf "${YELLOW}[WARN]${NC} %s\n" "$*"; }
 die()  { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; exit 1; }
 
 [[ ${EUID:-$(id -u)} -eq 0 ]] || die "Run with sudo/root."
+
+# Detach from the caller's cwd before any process substitution, git, rsync or rollback work.
+# This makes deployment safe even when the caller was inside a release directory that no longer exists.
+cd / || die "Cannot switch to a safe working directory."
 [[ -f /etc/bluegate/install.env ]] || die "/etc/bluegate/install.env not found."
 # shellcheck disable=SC1091
 source /etc/bluegate/install.env
