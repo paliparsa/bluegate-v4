@@ -38,6 +38,7 @@ Route::post('/logout',[AuthController::class,'logout'])->middleware('auth')->nam
 Route::prefix('app')->middleware('auth')->name('app.')->group(function(){
  Route::get('/',DashboardController::class)->name('dashboard');
  Route::get('/services',[ServiceController::class,'index'])->name('services');
+ Route::get('/setup',[ServiceController::class,'setup'])->name('setup');
  Route::get('/services/{id}',[ServiceController::class,'show'])->name('services.show');
  Route::get('/buy',[ShopController::class,'index'])->name('buy');
  Route::post('/buy',[ShopController::class,'order'])->name('buy.order');
