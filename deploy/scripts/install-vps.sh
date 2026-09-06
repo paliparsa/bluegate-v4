@@ -165,6 +165,7 @@ if ! grep -qE '^APP_KEY=base64:.+' .env; then php artisan key:generate --force; 
 COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --optimize --no-dev --no-interaction
 php artisan package:discover --ansi
 php artisan migrate --force
+php artisan db:seed --force
 php artisan storage:link >/dev/null 2>&1 || true
 php artisan optimize
 

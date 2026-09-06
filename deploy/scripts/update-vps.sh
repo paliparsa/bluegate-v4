@@ -43,6 +43,7 @@ fi
 log "Applying database migrations..."
 cd "$APP_DIR"
 php artisan migrate --force
+php artisan db:seed --force
 php artisan optimize:clear
 php artisan optimize
 php artisan storage:link >/dev/null 2>&1 || true

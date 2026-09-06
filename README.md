@@ -422,3 +422,35 @@ Required package "predis/predis" is not present in the lock file.
 Update the repository to the latest installer and run the one-line installer again. The current installer creates the Laravel base with Composer scripts disabled, overlays BlueGate first, resolves BlueGate dependencies, writes the PostgreSQL `.env`, and only then runs package discovery and migrations.
 
 Do **not** fix this by enabling SQLite in production; BlueGate uses PostgreSQL.
+
+---
+
+# Phase 2 UI / Dashboard
+
+این نسخه علاوه بر Foundation فنی، UI قابل استفاده هم دارد:
+
+- `/` صفحه اصلی BlueGate
+- `/login` و `/register`
+- `/app` داشبورد کاربر
+- `/app/services` سرویس‌های من
+- `/app/buy` خرید و ساخت سفارش
+- `/app/wallet` کیف پول
+- `/app/orders` سفارش‌ها
+- `/admin` پنل مدیریت پایه
+- `/admin/products` مشاهده محصولات و پلن‌ها
+- `/admin/nodes` مشاهده Nodeها
+
+بعد از Update، Catalog اولیه BluePing به شکل idempotent Seed می‌شود و داده قبلی پاک نمی‌شود.
+
+## ساخت اولین ادمین
+
+ابتدا در سایت ثبت‌نام کنید و سپس روی VPS اجرا کنید:
+
+```bash
+cd /var/www/bluegate
+sudo -u www-data php artisan bluegate:make-admin YOUR_EMAIL
+```
+
+بعد از خروج و ورود مجدد، گزینه «پنل مدیریت» در داشبورد نمایش داده می‌شود.
+
+> در Phase 2 ساخت Order واقعی است، اما درگاه پرداخت و Provisioning خودکار 3x-ui هنوز عمداً فعال نشده‌اند و در فاز بعدی تکمیل می‌شوند.

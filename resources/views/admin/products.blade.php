@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@section('title','محصولات — BlueGate Admin')
+@section('content')<div class="top-title"><div><h2>محصولات و پلن‌ها</h2><div class="muted">Catalog فعلی BlueGate</div></div></div>@foreach($products as $p)<section class="card" style="margin-bottom:16px"><h3>{{ $p->name }}</h3><p class="muted">{{ $p->slug }}</p><div class="table-wrap"><table class="table"><tr><th>پلن</th><th>حجم</th><th>مدت</th><th>قیمت</th></tr>@foreach($plans->get($p->id,collect()) as $plan)<tr><td>{{ $plan->name }}</td><td>{{ $plan->traffic_gb }} GB</td><td>{{ $plan->duration_days }} روز</td><td>{{ number_format((float)$plan->base_price) }}</td></tr>@endforeach</table></div></section>@endforeach@endsection
