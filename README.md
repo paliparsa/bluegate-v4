@@ -846,3 +846,22 @@ sudo -u www-data php artisan config:cache
 - Empty states، badges، progress bars و responsive behavior استاندارد
 - تمام route/form/actionهای Phase 6 حفظ شده‌اند
 - Admin همچنان functional است و Design System جدید را به ارث می‌برد؛ بازطراحی تخصصی Admin/Reseller برای Phase 7.2 است.
+
+
+---
+
+## Phase 7.2 — Admin + Reseller UI/UX
+
+این فاز روی تجربه مدیریت و فروشنده تمرکز دارد و Backend Phase 6 را تغییر نمی‌دهد.
+
+- Admin Control Center جدید با KPI و Quick Actions
+- Node Manager کارت‌محور با Health / Sync / Failover
+- Analytics جدید با KPI، Revenue trend و Infrastructure health
+- Payment Center بازطراحی‌شده
+- Catalog Manager جدید برای Product / Plan / Trial
+- Reseller Manager جدید
+- Reseller Developer Dashboard با API Key management و Quick Start
+- Coupon / Wallet / Support Desk با hierarchy جدید
+- Design primitives اختصاصی برای Admin و Developer screens
+- تمام routeها و form actionهای قبلی حفظ شده‌اند
+- Hotfixهای updater و Failover Phase 6 همچنان حفظ شده‌اند

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title','کدهای تخفیف — BlueGate Admin')
 @section('content')
-<div class="top-title"><div><h2>Coupon Center</h2><div class="muted">تخفیف درصدی/ثابت با سقف استفاده و تاریخ انقضا</div></div></div>
+<div class="admin-hero"><div><div class="admin-kicker">GROWTH</div><h2 style="margin:7px 0 6px">Coupon Center</h2><div class="muted">BlueGate Admin Operations</div></div><span class="pill">ADMIN</span></div>
 <div class="card" style="margin-bottom:18px"><form method="post" action="{{ route('admin.coupons.store') }}">@csrf
 <div class="grid">
 <div class="field"><label>Code</label><input class="input" name="code" required></div>
