@@ -49,7 +49,7 @@ final class ProvisionService {
      'id'=>(string)Str::uuid(),'user_id'=>$order->user_id,'order_id'=>$order->id,'product_id'=>$item->product_id,
      'plan_id'=>$item->plan_id,'status'=>'active','traffic_limit_bytes'=>$plan->unlimited_traffic?null:$totalBytes,
      'traffic_used_bytes'=>0,'starts_at'=>now(),'expires_at'=>$expiry,'device_limit'=>$plan->device_limit,
-     'subscription_token_hash'=>$token['hash'],'subscription_token_plain'=>$plain
+     'subscription_token_hash'=>$token['hash'],'subscription_token_plain'=>$plain,'current_location_id'=>$node->location_id
     ]);
     DB::table('service_endpoints')->insert([
      'id'=>(string)Str::uuid(),'service_id'=>$service->id,'node_id'=>$node->id,'inbound_id'=>$inbound->id,

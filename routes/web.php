@@ -5,6 +5,8 @@ use App\Http\Controllers\App\ServiceController;
 use App\Http\Controllers\App\ShopController;
 use App\Http\Controllers\App\WalletController;
 use App\Http\Controllers\App\CheckoutController;
+use App\Http\Controllers\App\PaymentController;
+use App\Http\Controllers\App\ServiceOperationController;
 use App\Http\Controllers\Admin\OperationsController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +36,13 @@ Route::prefix('app')->middleware('auth')->name('app.')->group(function(){
  Route::get('/wallet',[WalletController::class,'index'])->name('wallet');
  Route::get('/orders',[WalletController::class,'orders'])->name('orders');
  Route::post('/orders/{id}/wallet',[CheckoutController::class,'payWallet'])->name('orders.wallet');
+ Route::post('/orders/{id}/zarinpal',[PaymentController::class,'start'])->name('orders.zarinpal');
+ Route::post('/services/{id}/renew',[ServiceOperationController::class,'renew'])->name('services.renew');
+ Route::post('/services/{id}/traffic',[ServiceOperationController::class,'traffic'])->name('services.traffic');
+ Route::post('/services/{id}/location',[ServiceOperationController::class,'location'])->name('services.location');
 });
+Route::get('/payments/zarinpal/callback/{payment}/{token}',[PaymentController::class,'callback'])->name('payments.zarinpal.callback');
+
 Route::prefix('admin')->middleware(['auth','admin'])->name('admin.')->group(function(){
  Route::get('/',[AdminController::class,'dashboard'])->name('dashboard');
  Route::get('/nodes',[OperationsController::class,'nodes'])->name('nodes');
@@ -44,5 +52,6 @@ Route::prefix('admin')->middleware(['auth','admin'])->name('admin.')->group(func
  Route::get('/wallets',[OperationsController::class,'wallets'])->name('wallets');
  Route::post('/wallets/credit',[OperationsController::class,'credit'])->name('wallets.credit');
  Route::get('/products',[AdminController::class,'products'])->name('products');
+ Route::get('/payments',[AdminController::class,'payments'])->name('payments');
 });
 require __DIR__.'/subscription.php';

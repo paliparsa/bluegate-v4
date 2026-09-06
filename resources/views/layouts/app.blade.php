@@ -18,6 +18,7 @@
                 <a href="{{ route('admin.dashboard') }}">پنل مدیریت</a>
                 <a href="{{ route('admin.nodes') }}">مدیریت نودها</a>
                 <a href="{{ route('admin.wallets') }}">عملیات کیف پول</a>
+                <a href="{{ route('admin.payments') }}">پرداخت‌ها</a>
             @endif
         </nav>
     </aside>

@@ -490,3 +490,76 @@ sudo -u www-data php artisan bluegate:make-admin YOUR_EMAIL
 5. لینک BlueGate Subscription در `/app/services/{id}` نمایش داده می‌شود.
 
 > API endpointهای 3x-ui بین بعضی نسخه‌ها/forkها تفاوت دارند. Provider در یک Adapter مستقل نگه داشته شده تا در صورت تفاوت نسخه فقط همان فایل اصلاح شود.
+
+
+---
+
+## Phase 4 — Payments + Service Lifecycle
+
+Phase 4 مسیر فروش را از «پرداخت کیف پول» به چرخه کامل عملیات سرویس توسعه می‌دهد.
+
+### قابلیت‌ها
+
+- Zarinpal payment driver (Request / Callback / Verify)
+- Payment idempotency + callback token
+- Payment Center در `/admin/payments`
+- Provisioning خودکار بعد از Verify موفق
+- Telegram notification برای پرداخت/تحویل/خطای provisioning
+- QR Code برای لینک Subscription
+- تمدید سرویس با Wallet
+- خرید حجم 10 / 25 / 50 / 100 GB با Wallet
+- تغییر لوکیشن و مهاجرت Client بین Nodeها
+- حذف Client قدیمی بعد از مهاجرت موفق
+- Refund خودکار Wallet در صورت fail شدن عملیات تمدید/حجم/لوکیشن
+- `service_operations` برای audit/idempotency
+- ثبت current location هنگام Provision اولیه
+
+### تنظیم زرین‌پال
+
+بعد از Deploy، فایل `/var/www/bluegate/.env` را باز کن:
+
+```env
+ZARINPAL_MERCHANT_ID=YOUR_MERCHANT_ID
+ZARINPAL_AMOUNT_MULTIPLIER=10
+```
+
+در نسخه فعلی قیمت‌های Catalog با ظاهر «تومان» ذخیره/نمایش داده شده‌اند، بنابراین مقدار پیش‌فرض 10 مبلغ را برای Gateway به ریال تبدیل می‌کند. اگر دیتابیس خودت را از ابتدا با ریال نگهداری می‌کنی، این مقدار را `1` کن.
+
+سپس:
+
+```bash
+cd /var/www/bluegate
+sudo -u www-data php artisan config:clear
+sudo -u www-data php artisan config:cache
+```
+
+### Telegram
+
+اختیاری:
+
+```env
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_ADMIN_CHAT_ID=
+```
+
+اگر `users.telegram_id` برای کاربر موجود باشد، Notification برای خود کاربر هم ارسال می‌شود؛ در غیر این صورت فقط Admin Chat (در صورت تنظیم) پیام می‌گیرد.
+
+### قیمت عملیات
+
+```env
+BLUEGATE_TRAFFIC_PRICE_PER_GB=5000
+BLUEGATE_LOCATION_CHANGE_PRICE=0
+```
+
+این مقادیر فعلاً با واحد Catalog فعلی BlueGate محاسبه می‌شوند.
+
+### تست پیشنهادی Phase 4
+
+1. Node واقعی را Health + Sync کن.
+2. یک User تست و Wallet دارای موجودی داشته باش.
+3. سفارش را یک‌بار با Wallet تست کن.
+4. در My Services: QR، Renew، Add Traffic و Change Location را تست کن.
+5. Merchant ID را تنظیم کن و یک پرداخت کم‌مبلغ آنلاین تست کن.
+6. `/admin/payments` را برای authority/ref id/status بررسی کن.
+
+> Endpointهای 3x-ui در بعضی fork/versionها متفاوت‌اند. Update/Delete Client در Adapter مستقل قرار دارد تا در صورت تفاوت نسخه پنل فقط Provider تغییر کند.

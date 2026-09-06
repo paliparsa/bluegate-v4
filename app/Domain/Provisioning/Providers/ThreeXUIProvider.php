@@ -62,6 +62,23 @@ final class ThreeXUIProvider implements ProvisioningProvider
         return $this->authenticated($node)->post("/panel/api/inbounds/{$inboundId}/delClient/{$clientId}")->successful();
     }
 
+    public function updateClientOnInbound(Node $node, string $inboundId, string $clientUuid, array $client): array
+    {
+        $body = [
+            'id' => $inboundId,
+            'settings' => json_encode(['clients' => [$client]], JSON_UNESCAPED_SLASHES),
+        ];
+        return $this->authenticated($node)->asForm()
+            ->post('/panel/api/inbounds/updateClient/'.$clientUuid, $body)->throw()->json();
+    }
+
+    public function deleteClientFromInbound(Node $node, string $inboundId, string $clientUuid): bool
+    {
+        return $this->authenticated($node)
+            ->post("/panel/api/inbounds/{$inboundId}/delClient/{$clientUuid}")
+            ->successful();
+    }
+
     public function getUsage(Node $node, string $clientId): array
     {
         return $this->authenticated($node)->get('/panel/api/inbounds/getClientTraffics/'.$clientId)->throw()->json('obj', []);

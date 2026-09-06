@@ -12,9 +12,14 @@
 <td>{{ number_format((float)($o->status==='pending_payment' ? $o->payable : $o->subtotal)) }} تومان</td>
 <td>
 @if($o->status==='pending_payment')
+<div style="display:flex;gap:8px;flex-wrap:wrap">
 <form method="post" action="{{ route('app.orders.wallet',$o->id) }}">@csrf
-<button class="btn primary" type="submit">پرداخت با کیف پول</button>
+<button class="btn" type="submit">پرداخت با کیف پول</button>
 </form>
+<form method="post" action="{{ route('app.orders.zarinpal',$o->id) }}">@csrf
+<button class="btn primary" type="submit">پرداخت آنلاین</button>
+</form>
+</div>
 @elseif($o->status==='active')<span style="color:var(--ok)">تحویل شد</span>
 @elseif($o->status==='provisioning_failed')<span style="color:var(--danger)">ساخت سرویس ناموفق</span>
 @endif
