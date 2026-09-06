@@ -1,6 +1,21 @@
 @extends('layouts.app')
-@section('title','نودها — BlueGate Admin')
+@section('title','نودها — BlueGate')
 @section('content')
-<div class="top-title"><div><h2>Node Manager</h2><div class="muted">در این فاز نمایش آماده است؛ فرم افزودن/Sync در فاز Provisioning اضافه می‌شود.</div></div></div><div class="card table-wrap">@if($nodes->count())<table class="table"><tr><th>نام</th><th>لوکیشن</th><th>Provider</th><th>وضعیت</th><th>فروش</th></tr>@foreach($nodes as $n)<tr><td>{{ $n->name }}</td><td>{{ $n->location_name ?? '—' }}</td><td>{{ $n->provider_type }}</td><td>{{ $n->status }}</td><td>{{ $n->sales_enabled?'فعال':'متوقف' }}</td></tr>@endforeach</table>@else<div class="empty">هنوز نودی تعریف نشده است.</div>@endif</div>
+<div class="top-title"><div><h2>Node Manager</h2><div class="muted">اتصال مستقیم 3x-ui، Health و Sync Inbound</div></div></div>
+<div class="card" style="margin-bottom:18px"><h3>افزودن 3x-ui</h3>
+<form method="post" action="{{ route('admin.nodes.store') }}">@csrf
+<div class="grid">
+<div class="field"><label>نام</label><input class="input" name="name" required></div>
+<div class="field"><label>Slug</label><input class="input" name="slug" required placeholder="de-01"></div>
+<div class="field"><label>Panel URL</label><input class="input" name="panel_url" required placeholder="https://panel.example.com:2053"></div>
+<div class="field"><label>VPN Public Host/IP</label><input class="input" name="public_host" placeholder="de1.example.com"></div>
+<div class="field"><label>Username</label><input class="input" name="username" required></div>
+<div class="field"><label>Password</label><input class="input" type="password" name="password" required></div>
+<div class="field"><label>Location</label><select class="input" name="location_id"><option value="">بدون لوکیشن</option>@foreach($locations as $l)<option value="{{ $l->id }}">{{ $l->flag }} {{ $l->name }}</option>@endforeach</select></div>
+</div><button class="btn primary">ذخیره نود</button></form></div>
+<div class="card table-wrap"><table class="table"><tr><th>نود</th><th>وضعیت</th><th>Panel</th><th>فروش</th><th>عملیات</th></tr>
+@forelse($nodes as $n)<tr><td>{{ $n->name }}</td><td><span class="pill">{{ $n->status }}</span></td><td>{{ $n->panel_url }}</td><td>{{ $n->sales_enabled?'فعال':'خاموش' }}</td><td style="display:flex;gap:7px">
+<form method="post" action="{{ route('admin.nodes.health',$n) }}">@csrf<button class="btn">Health</button></form>
+<form method="post" action="{{ route('admin.nodes.sync',$n) }}">@csrf<button class="btn primary">Sync Inbounds</button></form>
+</td></tr>@empty<tr><td colspan="5">هنوز نودی ثبت نشده.</td></tr>@endforelse</table></div>
 @endsection
-

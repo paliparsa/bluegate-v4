@@ -47,12 +47,12 @@ final class ThreeXUIProvider implements ProvisioningProvider
     {
         $inboundId = $payload['inbound_id'] ?? throw new RuntimeException('inbound_id is required');
         $body = ['id' => $inboundId, 'settings' => json_encode(['clients' => [$payload['client']]], JSON_UNESCAPED_SLASHES)];
-        return $this->authenticated($node)->post('/panel/api/inbounds/addClient', $body)->throw()->json();
+        return $this->authenticated($node)->asForm()->post('/panel/api/inbounds/addClient', $body)->throw()->json();
     }
 
     public function updateClient(Node $node, string $clientId, array $payload): array
     {
-        return $this->authenticated($node)->post('/panel/api/inbounds/updateClient/'.$clientId, $payload)->throw()->json();
+        return $this->authenticated($node)->asForm()->post('/panel/api/inbounds/updateClient/'.$clientId, $payload)->throw()->json();
     }
 
     public function deleteClient(Node $node, string $clientId): bool

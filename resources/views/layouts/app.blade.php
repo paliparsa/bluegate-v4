@@ -16,6 +16,8 @@
 
             @if(in_array(auth()->user()->role, ['admin', 'super_admin'], true))
                 <a href="{{ route('admin.dashboard') }}">پنل مدیریت</a>
+                <a href="{{ route('admin.nodes') }}">مدیریت نودها</a>
+                <a href="{{ route('admin.wallets') }}">عملیات کیف پول</a>
             @endif
         </nav>
     </aside>
@@ -25,6 +27,10 @@
             <div class="alert success" style="margin-top:20px">
                 {{ session('success') }}
             </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert" style="margin-top:20px">{{ session('error') }}</div>
         @endif
 
         @yield('content')

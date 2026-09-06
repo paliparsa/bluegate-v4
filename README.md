@@ -454,3 +454,39 @@ sudo -u www-data php artisan bluegate:make-admin YOUR_EMAIL
 بعد از خروج و ورود مجدد، گزینه «پنل مدیریت» در داشبورد نمایش داده می‌شود.
 
 > در Phase 2 ساخت Order واقعی است، اما درگاه پرداخت و Provisioning خودکار 3x-ui هنوز عمداً فعال نشده‌اند و در فاز بعدی تکمیل می‌شوند.
+
+
+---
+
+## Phase 3 — Commerce + Provisioning
+
+این نسخه اولین مسیر عملیاتی end-to-end را اضافه می‌کند:
+
+- پرداخت اتمیک سفارش با Wallet Ledger
+- قفل ردیف کیف پول برای جلوگیری از double-spend
+- اتصال Node Manager به 3x-ui
+- Health Check و Sync Inbound از پنل
+- انتخاب خودکار نود سالم
+- Provisioning idempotent برای سفارش پرداخت‌شده
+- ساخت Client در 3x-ui
+- ساخت Service و Service Endpoint
+- Subscription Gateway اختصاصی BlueGate
+- تولید URI برای VLESS / VMess / Trojan (MVP)
+- Token اشتراک به‌صورت encrypted در دیتابیس
+- Usage Sync هر ۵ دقیقه
+- شارژ دستی کیف پول از Admin برای تست یا پرداخت تاییدشده
+- Updater جدید: launcher ابتدا خودش را از Git تازه می‌کند و سپس deploy اتمیک/rollback را اجرا می‌کند
+
+### راه‌اندازی اولین Node
+
+در `/admin/nodes` اطلاعات پنل 3x-ui را وارد کن. `VPN Public Host/IP` باید آدرس عمومی‌ای باشد که کلاینت‌ها به آن وصل می‌شوند، نه لزوماً hostname پنل. سپس Health و Sync Inbounds را بزن.
+
+### تست خرید end-to-end
+
+1. از `/admin/wallets` کیف پول کاربر تست را شارژ کن.
+2. کاربر از `/app/buy` سفارش بسازد.
+3. در `/app/orders` روی «پرداخت با کیف پول» بزند.
+4. BlueGate نود سالم را انتخاب، Client را در 3x-ui ایجاد و Service را فعال می‌کند.
+5. لینک BlueGate Subscription در `/app/services/{id}` نمایش داده می‌شود.
+
+> API endpointهای 3x-ui بین بعضی نسخه‌ها/forkها تفاوت دارند. Provider در یک Adapter مستقل نگه داشته شده تا در صورت تفاوت نسخه فقط همان فایل اصلاح شود.

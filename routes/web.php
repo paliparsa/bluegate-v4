@@ -4,6 +4,8 @@ use App\Http\Controllers\App\DashboardController;
 use App\Http\Controllers\App\ServiceController;
 use App\Http\Controllers\App\ShopController;
 use App\Http\Controllers\App\WalletController;
+use App\Http\Controllers\App\CheckoutController;
+use App\Http\Controllers\Admin\OperationsController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -31,10 +33,16 @@ Route::prefix('app')->middleware('auth')->name('app.')->group(function(){
  Route::post('/buy',[ShopController::class,'order'])->name('buy.order');
  Route::get('/wallet',[WalletController::class,'index'])->name('wallet');
  Route::get('/orders',[WalletController::class,'orders'])->name('orders');
+ Route::post('/orders/{id}/wallet',[CheckoutController::class,'payWallet'])->name('orders.wallet');
 });
 Route::prefix('admin')->middleware(['auth','admin'])->name('admin.')->group(function(){
  Route::get('/',[AdminController::class,'dashboard'])->name('dashboard');
- Route::get('/nodes',[AdminController::class,'nodes'])->name('nodes');
+ Route::get('/nodes',[OperationsController::class,'nodes'])->name('nodes');
+ Route::post('/nodes',[OperationsController::class,'storeNode'])->name('nodes.store');
+ Route::post('/nodes/{node}/health',[OperationsController::class,'health'])->name('nodes.health');
+ Route::post('/nodes/{node}/sync',[OperationsController::class,'sync'])->name('nodes.sync');
+ Route::get('/wallets',[OperationsController::class,'wallets'])->name('wallets');
+ Route::post('/wallets/credit',[OperationsController::class,'credit'])->name('wallets.credit');
  Route::get('/products',[AdminController::class,'products'])->name('products');
 });
 require __DIR__.'/subscription.php';
